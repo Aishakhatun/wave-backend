@@ -7,6 +7,6 @@ const contactSchema = new mongoose.Schema({
   subject: { type: String },
   message: { type: String, required: true },
   status: { type: String, enum: ['new', 'read', 'replied'], default: 'new' },
-}, { timestamps: true });
+}, { timestamps: true, collection: 'wave-contact' });
 
 module.exports = mongoose.model('Contact', contactSchema);
