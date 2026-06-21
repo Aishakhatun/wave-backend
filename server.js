@@ -6,7 +6,21 @@ const connectDB = require('./config/db');
 const app = express();
 connectDB();
 
-app.use(cors({ origin: [/localhost:\d+$/], credentials: true }));
+app.use(cors({
+  origin: function (origin, callback) {
+    const allowed = [
+      /localhost:\d+$/,
+      /\.vercel\.app$/,
+      process.env.FRONTEND_URL,
+    ].filter(Boolean);
+    if (!origin || allowed.some(p => (typeof p === 'string' ? p === origin : p.test(origin)))) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+}));
 app.use(express.json());
 
 app.use('/api/products', require('./routes/productRoutes'));
